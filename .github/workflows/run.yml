@@ -3,8 +3,6 @@ on:
   push:
     branches:
       - main
-  watch:
-    types: started
   workflow_dispatch:
   schedule:
     - cron: 35 2 * * *
@@ -17,10 +15,10 @@ jobs:
         run: sleep $((RANDOM % 301))
 
       - name: 🔌 Check out code
-        uses: actions/checkout@main
+        uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a # v6 main 2026-11-08
 
       - name: 🔨 Setup Node.js environment
-        uses: actions/setup-node@main
+        uses: actions/setup-node@101b3474143230c3562bd21f0b3c3f8254784571 # main 2026-11-08
         with:
           node-version: 18
           cache: npm
@@ -32,14 +30,14 @@ jobs:
       
       - name: 📹 Restore cached Cookie
         id: cache-cookie-restore
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: .token
           key: cloud189-token-${{ hashFiles('.token/*.json') }}
           restore-keys: cloud189-token-
 
       - name: 🔧 Init secrets
-        uses: shine1594/secrets-to-env-action@master
+        uses: shine1594/secrets-to-env-action@eec13a127add1fac92d281284ee63b322072f011 # master 2026-11-08
         with:
           secrets: ${{ toJSON(secrets) }}
           secrets_env: production
@@ -50,7 +48,7 @@ jobs:
         run: npm install
 
       - name: 🚀 Run
-        uses: nick-fields/retry@master
+        uses: nick-fields/retry@1c62e0697831d444be410bc770cc1576ab22de08 # master 2026-11-08
         with:
           timeout_minutes: 30
           max_attempts: 3
@@ -64,7 +62,7 @@ jobs:
 
       - name: 📹 Save cached Cookie
         if: always() && env.TOKEN_HASH != ''
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: .token
           key: cloud189-token-${{ env.TOKEN_HASH }}
@@ -80,7 +78,7 @@ jobs:
           git push
 
       - name: 🎉 Delete old workflow run
-        uses: Mattraks/delete-workflow-runs@main
+        uses: Mattraks/delete-workflow-runs@0cf693bc9909e5e867ee8f27b813224ba862939c # main 2026-11-08
         with:
           token: ${{ github.token }}
           repository: ${{ github.repository }}
